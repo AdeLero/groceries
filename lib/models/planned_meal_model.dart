@@ -20,4 +20,4 @@ class PlannedMeal {
 
 ValueNotifier<List<PlannedMeal>> plannedMeals = ValueNotifier<List<PlannedMeal>>([]);
 
-ValueNotifier<List<PlannedMeal>> finalMealPlan = ValueNotifier<List<PlannedMeal>>([]);
+// ValueNotifier<List<PlannedMeal>> finalMealPlan = ValueNotifier<List<PlannedMeal>>([]);

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:groceries/customization/colors.dart';
 import 'package:groceries/models/meal_type_model.dart';
 import 'package:groceries/models/planned_meal_model.dart';
+import 'package:groceries/screens/ingredients/ingredients_inventory.dart';
 import 'package:groceries/screens/plan_a_meal.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 
 class MealPlanPage extends StatefulWidget {
@@ -33,11 +35,9 @@ class _MealPlanPageState extends State<MealPlanPage> {
 
 
 
-  void _createMealPlan () {
-    setState(() {
-      finalMealPlan.value.addAll(plannedMeals.value);
-      plannedMeals.value = [];
-    });
+  void _createMealPlan (BuildContext context) {
+    var inventoryProvider = Provider.of<Inventory>(context,listen: false);
+    inventoryProvider.updateMealPlanList(plannedMeals.value);
   }
   @override
   Widget build(BuildContext context) {
@@ -210,7 +210,7 @@ class _MealPlanPageState extends State<MealPlanPage> {
                             MaterialStateProperty.all(CustomColors.deepBlue),
                       ),
                       onPressed: () {
-                        _createMealPlan();
+                        _createMealPlan(context);
                         Navigator.of(context).pop();
                       },
                       child: Text(

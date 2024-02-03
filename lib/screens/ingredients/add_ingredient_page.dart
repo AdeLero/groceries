@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:groceries/customization/colors.dart';
 import 'package:groceries/models/ingredient_model.dart';
 import 'package:groceries/screens/ingredients/ingredients_inventory.dart';
+import 'package:provider/provider.dart';
 
 class AddIngredient extends StatefulWidget {
   const AddIngredient({super.key});
@@ -19,7 +20,6 @@ class _AddIngredientState extends State<AddIngredient> {
       TextEditingController();
   TextEditingController _ingredientSUOM = TextEditingController();
   TextEditingController _ingredientCF = TextEditingController();
-  final Inventory inventory = Inventory();
   void _addIngredient() {
     final ingredientName = _ingredientNameController.text;
     final ingredientQuantity = double.parse(_ingredientQuantityController.text);
@@ -36,10 +36,8 @@ class _AddIngredientState extends State<AddIngredient> {
       secondaryUnitofMeasurement: ingredientSUOM,
       conversionFactor: ingredientCF
     );
-
-    inventory.addIngredient(newIngredient);
-
-
+    var inventoryProviders = Provider.of<Inventory>(context,listen: false);
+    inventoryProviders.addIngredient(newIngredient);
     _ingredientUnitOfMeasurementController.clear();
     _ingredientSUOM.clear();
     _ingredientCF.clear();
