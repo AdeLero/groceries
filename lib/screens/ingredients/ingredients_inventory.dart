@@ -4,25 +4,37 @@ import 'package:groceries/models/ingredient_model.dart';
 import '../../models/planned_meal_model.dart';
 
 
-class Inventory {
-  ValueNotifier<List<Ingredient>> ingredients =
-  ValueNotifier<List<Ingredient>>([]);
-
+class Inventory extends ChangeNotifier{
+  List<Ingredient> ingredients =[];
+  bool isCritical = false;
+  int currentPageIndex = 0;
+  List<PlannedMeal> finalMealPlan = [];
+  void updateMealPlanList(List<PlannedMeal>meals){
+    finalMealPlan=meals;
+    notifyListeners();
+  }
+  void updateTabIndex(int tabIndex){
+    currentPageIndex=tabIndex;
+    notifyListeners();
+  }
   void addIngredient(Ingredient ingredient) {
-    ingredients.value.add(ingredient);
-    ingredients.notifyListeners();
+    ingredients.add(ingredient);
+   notifyListeners();
   }
 
   void removeIngredient(Ingredient ingredient) {
-    ingredients.value.remove(ingredient);
-    ingredients.notifyListeners();
+    ingredients.remove(ingredient);
+    notifyListeners();
   }
-
+  void setCriticalStatus(bool isCritical){
+    this.isCritical=isCritical;
+    notifyListeners();
+  }
   void updateIngredient(Ingredient oldIngredient, Ingredient newIngredient) {
-    final index = ingredients.value.indexOf(oldIngredient);
+    final index = ingredients.indexOf(oldIngredient);
     if (index != -1) {
-      ingredients.value[index] = newIngredient;
-      ingredients.notifyListeners();
+      ingredients[index] = newIngredient;
+      notifyListeners();
     }
   }
 
@@ -34,13 +46,13 @@ class Inventory {
         for (var ingredient in meal.mealIngredients) {
           final requiredQuantity = ingredient.quantity * servings;
 
-          final index = ingredients.value.indexWhere((item) => item.ingredientName == ingredient.ingredientName);
+          final index = ingredients.indexWhere((item) => item.ingredientName == ingredient.ingredientName);
           if (index != -1) {
-            ingredients.value[index].quantity -= requiredQuantity;
+            ingredients[index].quantity -= requiredQuantity;
           }
         }
       }
     }
-    ingredients.notifyListeners();
+   notifyListeners();
   }
 }

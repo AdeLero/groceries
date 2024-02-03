@@ -3,6 +3,7 @@ import 'package:groceries/customization/colors.dart';
 import 'package:groceries/models/ingredient_model.dart';
 import 'package:groceries/screens/ingredients/add_ingredient_page.dart';
 import 'package:groceries/screens/ingredients/ingredients_inventory.dart';
+import 'package:provider/provider.dart';
 
 class IngredientListScreen extends StatefulWidget {
   const IngredientListScreen({super.key});
@@ -12,54 +13,51 @@ class IngredientListScreen extends StatefulWidget {
 }
 
 class _IngredientListScreenState extends State<IngredientListScreen> {
-  final Inventory inventory = Inventory();
-  late List<Ingredient> ingredientList = inventory.ingredients.value;
+
 
   @override
   Widget build(BuildContext context) {
-    return ingredientList != null && ingredientList.isNotEmpty
-        ? Padding(
+    return Consumer<Inventory>(
+        builder: (context, inventoryProvider, child) {
+          return inventoryProvider.ingredients.isNotEmpty
+              ? Padding(
             padding: const EdgeInsets.all(20.0),
-            child: ValueListenableBuilder(
-              valueListenable: inventory.ingredients,
-              builder: (context, ingredient, child) {
-                return ListView.builder(
-                    itemCount: ingredientList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child:ListView.builder(
+                itemCount: inventoryProvider.ingredients.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          inventoryProvider.ingredients[index].ingredientName,
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        Column(
                           children: [
                             Text(
-                              ingredientList[index].ingredientName,
+                              '${inventoryProvider.ingredients[index].quantity} '
+                                  '${inventoryProvider.ingredients[index].primaryunitOfMeasurement.toString()}',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 12,
                               ),
                             ),
-                            Column(
-                              children: [
-                                Text(
-                                  '${ingredientList[index].quantity} ${ingredient[index].primaryunitOfMeasurement.toString()}',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                if (ingredientList[index].isCritical)
-                                  Text(
-                                    'critical',
-                                    style: TextStyle(
-                                        color: CustomColors.purple, fontSize: 10),
-                                  ),
-                              ],
-                            ),
+                            if (inventoryProvider.ingredients[index].isCritical)
+                              Text(
+                                'critical',
+                                style: TextStyle(
+                                    color: CustomColors.purple, fontSize: 10),
+                              ),
                           ],
                         ),
-                      );
-                    });
-              },
-            ),
+                      ],
+                    ),
+                  );
+                }),
           )
-        : Center(
+              : Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -95,5 +93,7 @@ class _IngredientListScreenState extends State<IngredientListScreen> {
               ],
             ),
           );
+        }
+    );
   }
 }
