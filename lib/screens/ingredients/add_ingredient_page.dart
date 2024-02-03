@@ -20,7 +20,7 @@ class _AddIngredientState extends State<AddIngredient> {
       TextEditingController();
   TextEditingController _ingredientSUOM = TextEditingController();
   TextEditingController _ingredientCF = TextEditingController();
-  void _addIngredient(Inventory inventoryProvider) {
+  void _addIngredient() {
     final ingredientName = _ingredientNameController.text;
     final ingredientQuantity = double.parse(_ingredientQuantityController.text);
     final ingredientCriticalQuantity =
@@ -36,7 +36,8 @@ class _AddIngredientState extends State<AddIngredient> {
       secondaryUnitofMeasurement: ingredientSUOM,
       conversionFactor: ingredientCF
     );
-    inventoryProvider.addIngredient(newIngredient);
+    var inventoryProviders = Provider.of<Inventory>(context,listen: false);
+    inventoryProviders.addIngredient(newIngredient);
     _ingredientUnitOfMeasurementController.clear();
     _ingredientSUOM.clear();
     _ingredientCF.clear();
@@ -47,231 +48,227 @@ class _AddIngredientState extends State<AddIngredient> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Inventory>(
-        builder: (context, inventoryProvider, child) {
-          return Scaffold(
-            appBar: AppBar(
-              elevation: 0,
-              centerTitle: true,
-              title: Text(
-                'ADD AN INGREDIENT',
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'ADD AN INGREDIENT',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Name',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          TextField(
+                            controller: _ingredientNameController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.all(10),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Quantity',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          TextField(
+                            controller: _ingredientQuantityController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.all(10),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Minimum Quantity',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          TextField(
+                            controller: _ingredientCriticalQuantityController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.all(10),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Primary Unit of Measurement',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          TextField(
+                            controller: _ingredientUnitOfMeasurementController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.all(10),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Secondary unit of measurement',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          TextField(
+                            controller: _ingredientSUOM,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.all(10),
+                            ),
+                          ),
+                          Text(
+                            'How many unit of Primary makes one (1) of this?',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            width: 80,
+                            height: 35,
+                            child: TextField(
+                              controller: _ingredientCF,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                contentPadding: EdgeInsets.all(10),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                fixedSize: MaterialStateProperty.all(
+                  Size(320, 35),
+                ),
+                backgroundColor:
+                MaterialStateProperty.all(CustomColors.deepBlue),
+              ),
+              onPressed: () {
+                _addIngredient();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Create Ingredient',
                 style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              backgroundColor: Colors.white,
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: Colors.black,
+                  fontSize: 14,
+                  color: Colors.white,
                 ),
               ),
             ),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Name',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                TextField(
-                                  controller: _ingredientNameController,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    contentPadding: EdgeInsets.all(10),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Quantity',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                TextField(
-                                  controller: _ingredientQuantityController,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    contentPadding: EdgeInsets.all(10),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Minimum Quantity',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                TextField(
-                                  controller: _ingredientCriticalQuantityController,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    contentPadding: EdgeInsets.all(10),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Primary Unit of Measurement',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                TextField(
-                                  controller: _ingredientUnitOfMeasurementController,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    contentPadding: EdgeInsets.all(10),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Secondary unit of measurement',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                TextField(
-                                  controller: _ingredientSUOM,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    contentPadding: EdgeInsets.all(10),
-                                  ),
-                                ),
-                                Text(
-                                  'How many unit of Primary makes one (1) of this?',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Container(
-                                  width: 80,
-                                  height: 35,
-                                  child: TextField(
-                                    controller: _ingredientCF,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      contentPadding: EdgeInsets.all(10),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      fixedSize: MaterialStateProperty.all(
-                        Size(320, 35),
-                      ),
-                      backgroundColor:
-                      MaterialStateProperty.all(CustomColors.deepBlue),
-                    ),
-                    onPressed: () {
-                      _addIngredient(inventoryProvider);
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'Create Ingredient',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
+          ],
+        ),
+      ),
     );
   }
 }
