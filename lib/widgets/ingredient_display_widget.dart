@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:groceries/customization/colors.dart';
 import 'package:groceries/models/ingredient_model.dart';
+import 'package:groceries/screens/ingredients/ingredients_inventory.dart';
 
 class IngredientDisplayWidget extends StatefulWidget {
   const IngredientDisplayWidget({super.key});
@@ -10,15 +11,16 @@ class IngredientDisplayWidget extends StatefulWidget {
 }
 
 class _IngredientDisplayWidgetState extends State<IngredientDisplayWidget> {
-  List<Ingredient> ingredientList = ingredients.value;
+  final Inventory inventory = Inventory();
+  late List<Ingredient> ingredientList = inventory.ingredients.value;
   bool isCritical = false;
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<Ingredient>>(
-      valueListenable: ingredients,
-      builder: (context, ingredient, child) {
+      valueListenable: inventory.ingredients,
+      builder: (context, ingredients, child) {
         return ListView.builder(
-            itemCount: ingredients.value.length,
+            itemCount: ingredients.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
                 width: 320,
@@ -29,7 +31,7 @@ class _IngredientDisplayWidgetState extends State<IngredientDisplayWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        ingredient[index].ingredientName,
+                        ingredients[index].ingredientName,
                         style: TextStyle(
                           fontSize: 14,
                         ),
@@ -37,12 +39,12 @@ class _IngredientDisplayWidgetState extends State<IngredientDisplayWidget> {
                       Column(
                         children: [
                           Text(
-                            '${ingredient[index].quantity} ${ingredient[index].primaryunitOfMeasurement.toString()}',
+                            '${ingredients[index].quantity} ${ingredients[index].primaryunitOfMeasurement.toString()}',
                             style: TextStyle(
                               fontSize: 12,
                             ),
                           ),
-                          if (ingredient[index].isCritical)
+                          if (ingredients[index].isCritical)
                             Text(
                             'critical',
                             style: TextStyle(
